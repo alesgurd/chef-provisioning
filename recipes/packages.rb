@@ -81,7 +81,7 @@ end
 # Fetching Vagrant binary
 remote_file '/tmp/vagrant.deb' do
   source 'https://releases.hashicorp.com/vagrant/2.2.4/vagrant_2.2.4_x86_64.deb'
-  mode '0755'
+  mode '0644'
   action :create
 end
 
@@ -110,4 +110,42 @@ execute 'Unzip gradle directory' do
   command 'unzip /tmp/gradle-5.3-bin.zip -d /opt/'
   action :run
   not_if { ::Dir.exist?('/opt/gradle-5.3') }
+end
+
+# Install maven
+package 'maven'
+
+# Fetching Terraform binary
+remote_file '/tmp/terraform_0.11.13_linux_amd64.zip' do
+  source 'https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip'
+  mode '0644'
+end
+
+# Unzipping terraform binary to bin dir
+execute 'Unzip terraform binary' do
+  command 'unzip /tmp/terraform_0.11.13_linux_amd64.zip -d /usr/local/bin/'
+  action :run
+  not_if { ::File.exist?('/usr/local/bin/terraform') }
+end
+
+# Fetching Datagrip tarfile
+remote_file '/tmp/datagrip.tar.gz' do
+  source 'https://download.jetbrains.com/datagrip/datagrip-2018.3.4.tar.gz'
+  mode '0644'
+end
+
+# Untar the Datagrip directory
+execute 'Untar datagrip directory' do
+  command 'unzip /tmp/datagrip.tar.gz -d /opt/Datagrip'
+  action :run
+  not_if { ::Dir.exist?('/opt/Datagrip') }
+end
+
+# Install zsh
+package 'zsh'
+
+# Install oh-my-zsh
+execute 'Install oh-my-zsh' do
+  command 'wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh; cp $HOME/.oh-my-zsh/templates/zshrc.zsh-template $HOME/.zshrc; source $HOME/.zshrc'
+  not_if { ::Dir.exist?('$HOME/.oh-my-zsh') }
 end

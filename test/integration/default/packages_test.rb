@@ -5,12 +5,11 @@
 # The Inspec reference, with examples and extensive documentation, can be
 # found at http://inspec.io/docs/reference/resources/
 
-describe package('git') do
-  it { should be_installed }
-end
-
-describe package('vim') do
-  it { should be_installed }
+# Describe installed packages
+%w(git vim google-chrome-stable virtualbox code docker-ce vagrant maven zsh).each do |p|
+  describe package(p) do
+    it { should be_installed }
+  end
 end
 
 describe command('java --version') do
@@ -20,22 +19,6 @@ end
 describe file('/home/mroldan/go') do
   its('type') { should eq :directory }
   it { should be_directory }
-end
-
-describe package('google-chrome-stable') do
-  it { should be_installed }
-end
-
-describe package('virtualbox') do
-  it { should be_installed }
-end
-
-describe package('code') do
-  it { should be_installed }
-end
-
-describe package('docker-ce') do
-  it { should be_installed }
 end
 
 describe command('docker -v') do
@@ -48,10 +31,6 @@ describe service('docker') do
   it { should be_running }
 end
 
-describe package('vagrant') do
-  it { should be_installed }
-end
-
 describe file('/usr/local/bin/kubectl') do
   it { should exist }
 end
@@ -59,4 +38,16 @@ end
 describe file('/opt/gradle-5.3') do
   its('type') { should eq :directory }
   it { should be_directory }
+end
+
+describe file('/usr/local/bin/terraform') do
+  it { should exist }
+end
+
+describe file('/opt/Datagrip') do
+  it { should be_directory }
+end
+
+describe file('$HOME/.oh-my-zsh') do
+  it { should be_directory}
 end

@@ -20,6 +20,7 @@ suites:
     run_list:
       - recipe[devSetup::default]
       - recipe[devSetup::packages]
+      - recipe[devSetup::fileHandle]
     verifier:
       inspec_tests:
         - test/integration/default
