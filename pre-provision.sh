@@ -1,18 +1,31 @@
 #!/bin/bash
 
-echo "Installing the chefdk"
-wget https://packages.chef.io/files/stable/chefdk/3.8.14/debian/9/chefdk_3.8.14-1_amd64.deb
-dpkg -i chefdk_3.8.14.-1_amd64.deb
+if [[ ! -f "/root/chefdk_3.8.14-1_amd64.deb" ]] ; then
+    echo "---------------- Installing the chefdk ----------------"
+    wget https://packages.chef.io/files/stable/chefdk/3.8.14/debian/9/chefdk_3.8.14-1_amd64.deb -P /root/
+    dpkg -i /root/chefdk_3.8.14-1_amd64.deb
+else
+    echo "---------------- Chef client already exists ----------------"
+fi
 
-echo "Creating cookbooks directory"
-mkdir /var/chef/cookbooks
+if [[ ! -d /var/chef/cookbooks ]] ; then
+    echo "---------------- Creating cookbooks directory ----------------"
+    mkdir /var/chef/cookbooks
+else
+    echo "---------------- Cookbooks directory already exists ----------------"
+fi
 
-echo "Cloning project from git"
-git clone https://github.com/alesgurd/chef-provisioning.git /var/chef/cookbooks/devSetup 
+if [[ ! -d '/var/chef/cookbooks/devSetup' ]] ; then
+    echo "---------------- Cloning cookbook from git ----------------"
+    git clone https://github.com/alesgurd/chef-provisioning.git /var/chef/cookbooks/devSetup 
+else
+    echo "---------------- Cookbook already exists ----------------"
+fi
 
-echo "Establishing the local berks repository and resolving cookbook dependencies."
-berks vendor /var/cache/cookbooks
+echo "---------------- Establishing the local berks repository and resolving cookbook dependencies. ----------------"
+berks vendor /var/chef/cookbooks --berksfile=/var/chef/cookbooks/devSetup/Berksfile
 
-echo "Initiliazing chef-client locally."
-chef-client -z -o devSetup::packages
-chef-client -z -o devSetup::fileHandle
+echo "---------------- Initiliazing chef-client locally. ----------------"
+chef-solo -o devSetup::packages
+chef-solo -o devSetup::fileHandle
+chef-solo -o devSetup::desktopEntries
