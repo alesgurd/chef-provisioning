@@ -129,16 +129,10 @@ execute 'Unzip terraform binary' do
 end
 
 # Fetching Datagrip tarfile
-remote_file '/tmp/datagrip.tar.gz' do
+tar_extract '/tmp/datagrip.tar.gz' do
   source 'https://download.jetbrains.com/datagrip/datagrip-2018.3.4.tar.gz'
-  mode '0644'
-end
-
-# Untar the Datagrip directory
-execute 'Untar datagrip directory' do
-  command 'unzip /tmp/datagrip.tar.gz -d /opt/Datagrip'
-  action :run
-  not_if { ::Dir.exist?('/opt/Datagrip') }
+  target_dir '/opt/'
+  creates '/opt/Datagrip'
 end
 
 # Install zsh
@@ -146,6 +140,6 @@ package 'zsh'
 
 # Install oh-my-zsh
 execute 'Install oh-my-zsh' do
-  command 'wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh; cp $HOME/.oh-my-zsh/templates/zshrc.zsh-template $HOME/.zshrc; source $HOME/.zshrc'
+  command 'wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh; cp $HOME/.oh-my-zsh/templates/zshrc.zsh-template $HOME/.zshrc'
   not_if { ::Dir.exist?('$HOME/.oh-my-zsh') }
 end

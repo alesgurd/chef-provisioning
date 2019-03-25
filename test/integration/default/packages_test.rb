@@ -44,10 +44,10 @@ describe file('/usr/local/bin/terraform') do
   it { should exist }
 end
 
-describe file('/opt/Datagrip') do
+describe file('/opt/DataGrip-2018.3.4') do
   it { should be_directory }
 end
 
-describe file('$HOME/.oh-my-zsh') do
-  it { should be_directory}
+describe file('/home/vagrant/.oh-my-zsh') do
+  it { should be_directory }
 end
