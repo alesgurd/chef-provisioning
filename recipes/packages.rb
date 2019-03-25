@@ -35,8 +35,9 @@ package 'openjdk-11-jdk'
 
 # Fetching golang binary
 tar_extract 'https://dl.google.com/go/go1.12.1.linux-amd64.tar.gz' do
-  target_dir '/home/mroldan'
-  creates '/home/mroldan/go'
+  target_dir '$HOME'
+  creates '$HOME/go'
+  not_if { ::Dir.exist?('$HOME/go') }
 end
 
 # Install google-chrome-stable
@@ -83,6 +84,7 @@ remote_file '/tmp/vagrant.deb' do
   source 'https://releases.hashicorp.com/vagrant/2.2.4/vagrant_2.2.4_x86_64.deb'
   mode '0644'
   action :create
+  not_if { ::Dir.exist?('/opt/vagrant') }
 end
 
 # Installing Vagrant
@@ -96,6 +98,7 @@ remote_file '/usr/local/bin/kubectl' do
   source 'https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl'
   mode '0755'
   action :create
+  not_if { ::File.exist?('/usr/local/bin/kubectl') }
 end
 
 # Fetching Gradle binary
@@ -103,6 +106,7 @@ remote_file '/tmp/gradle-5.3-bin.zip' do
   source 'https://services.gradle.org/distributions/gradle-5.3-bin.zip'
   mode '0644'
   action :create
+  not_if { ::Dir.exist?('/opt/gradle-5.3') }
 end
 
 # Unzip gradle directory
@@ -119,6 +123,7 @@ package 'maven'
 remote_file '/tmp/terraform_0.11.13_linux_amd64.zip' do
   source 'https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip'
   mode '0644'
+  not_if { ::File.exist?('/usr/local/bin/terraform') }
 end
 
 # Unzipping terraform binary to bin dir
